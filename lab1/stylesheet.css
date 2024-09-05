@@ -1,0 +1,117 @@
+
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 15px;
+    background-color: #f4f4f4;
+}
+
+
+h1 {
+    color: #7babdb;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 2.5em;
+    text-shadow: 0 0 8px #0066cc, 0 0 16px #0066cc, 0 0 24px #0066cc;
+}
+
+
+h2 {
+    color: #555;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+p {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style-type: square;
+    margin-left: 20px;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+/* Image and figure */
+figure {
+    margin: 20px auto;
+    text-align: center;
+}
+
+figure img {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+figcaption {
+    font-style: italic;
+    margin-top: 10px;
+    color: #777;
+}
+
+/* General button styles */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.navbutton {
+    background-color: #e236b4;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 100px;
+    border-radius: 5px;
+    margin-right: 15px;
+    
+  }
+
+/* Button for 2019 */
+.button1 {
+    background-color: #0066cc; /* Blue for 2019 */
+}
+
+/* Button for 2021 */
+.button2 {
+    background-color: #ff6600; /* Orange for 2021 */
+}
+
+/* Button for Both */
+.button3 {
+    background-color: #8A2BE2; /* Any other color (e.g., BlueViolet) for Both */
+}
+
+/* Hover effects for buttons */
+button:hover {
+    opacity: 0.8;
+}
+
+
+/* Footer styles */
+footer {
+    background-color: #ce8f65; /* Orange background */
+    color: #fff;               /* White text color */
+    text-align: left;          /* Align text to the left */
+    padding: 10px 20px;        /* Add padding around the text */
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 5px 0;             /* Space between each line */
+}
+
+

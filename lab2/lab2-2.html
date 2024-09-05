@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Lab 2-2"/>
+	<meta name="keywords"		  content="HTML, CSS"/>
+	<meta name="author"			  content="Khor Jing Yin"/>
+
+	<title>Task 2.1	D3 Data Binding</title>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<style>
+
+
+	</style>
+
+</head>
+
+<body>
+
+	<h1>The D3 Journey starts here...</h1>
+
+	<script>
+		var w = 500;
+		var h = 150;
+		var padding = 5;
+
+		//var dataset = [14, 5, 26, 23, 9];
+		var dataset = [14, 5, 26, 23, 9, 17, 2, 29, 8];
+
+		var svg = d3.select("body")
+					.append("svg")
+					.attr("width", w)
+					.attr("height", h)
+					.attr("fill", "rgb(106,90, 205)" );
+
+		svg.selectAll("rect")
+			.data(dataset)
+			.enter()
+			.append("rect")
+			<!-- d is dataset and i is the index of the values from dataset-->
+			.attr("x", function(d, i) {
+				return i * (w / dataset.length);
+			})
+			.attr("y", function(d){
+				return h-(d*4);
+					//y-coordinate top left starts from (0,0)
+			})
+			.attr("width", function(d){ //width of the bar
+				return w / dataset.length - padding ;
+			})
+			.attr("height", function(d){ //height of the bar
+				return d*4;		//bottom left start from d*4
+			});
+			
+			svg.selectAll("text")
+				.data(dataset)
+				.enter()
+				.append("text")
+				.text(function(d){
+					return d;
+				})
+				.attr("fill", "black")
+				.attr("x", function(d,i) {
+					return i * w/dataset.length + 23;
+				})
+				.attr("y", function(d){
+					return h - (d*4) - 3;
+				});
+			
+	</script>
+
+	
+
+	<footer>COS30045 Data Visualisation</footer>
+
+</body>
+</html>

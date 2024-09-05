@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Exercise 1"/>
+	<meta name="keywords"		  content="HTML, CSS"/>
+	<meta name="author"			  content="Your name here"/>
+
+	<title>Task 2.1	D3 Data Binding</title>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<style>
+
+
+	</style>
+
+</head>
+
+<body>
+
+	<h1>The D3 Journey starts here...</h1>
+
+	<script>
+
+		var dataset = [14, 5, 26, 23, 9];
+
+		d3.select("body").selectAll("p")
+			.data(dataset)
+			.enter()
+			.append("p")
+			.text("New Paragraph")
+	</script>
+
+	
+
+	<footer>COS30045 Data Visualisation</footer>
+
+</body>
+</html>
