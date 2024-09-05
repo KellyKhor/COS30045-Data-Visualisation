@@ -16,15 +16,15 @@
 		<a class="navbutton" href="lab3-1.html">Lab 1</a>
 		<a class="navbutton" href="lab3-2.html" >Lab 2</a>
 
-	<h1>Lab 3.1 D3 Scaling your Charts</h1>
+	<h1>Lab 3.2 D3 Adding Axis to your Charts</h1>
 
 	<script>
-		var w = 500;
-		var h = 300;
+		var w = 600;
+		var h = 400;
 		var padding = 30;
 
 		var dataset = [
-                    [5, 20], 
+                    [15, 5], 
                     [510,90],
                     [250, 50], 
                     [100, 53],
@@ -37,18 +37,14 @@
         ];
 
         var xScale = d3.scaleLinear()
-                        .domain([ d3.min(dataset, function(d){ //looking at the x-axis
-                            return d[0];
-                        }) , 
+                        .domain([0, 
                         d3.max(dataset, function(d){
                             return d[0];
                         })])
                         .range([padding, w - padding])  //width of svg canvas
 
         var yScale = d3.scaleLinear()
-                        .domain([ d3.min(dataset, function(d){  //looking at the y-axis
-                            return d[1];
-                        }) , 
+                        .domain([0, 
                         d3.max(dataset, function(d){
                             return d[1];
                         })])
@@ -61,6 +57,13 @@
 					.attr("height", h)
 					.attr("fill", "rgb(106,90, 205)" );
 
+        var xAxis = d3.axisBottom()
+                        .scale(xScale)
+
+        var yAxis = d3.axisLeft()
+                        .ticks(5)
+                        .scale(yScale)
+
 		svg.selectAll("circle   ")
 			.data(dataset)
 			.enter()
@@ -71,7 +74,7 @@
 			.attr("cy", function(d, i){
 				return yScale(d[1]);
 			})
-			.attr("r", 5)
+			.attr("r", 3)
 			.attr("fill", "slategrey");
 
 		svg.selectAll("text")
@@ -89,6 +92,13 @@
 			});
 			
 	
+        svg.append("g")
+                .attr("transform", "translate(0, "+ (h - padding) +")")
+                .call(xAxis);
+
+        svg.append("g")
+           .attr("transform", "translate(" + padding + ", 0)")
+           .call(yAxis);
 			
 	</script>
 
