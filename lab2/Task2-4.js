@@ -8,7 +8,7 @@ function init(){
 
 
     var w = 500;
-    var h = 350;
+    var h = 600;
     var padding = 5;
 
     //D3 block
@@ -26,16 +26,16 @@ function init(){
                 return i * (w / wombatSightings.length);
             })
             .attr("y", function(d) {
-                return h - (d.wombat * 4);
+                return h - (d.wombat * 6);
             })
             .attr("width", function(d) {
                 return w / wombatSightings.length - padding;
             })
             .attr("height", function(d) {
-                return d.wombat * 4;
+                return d.wombat * 6;
             })
             .attr("fill", function(d) {
-                return "rgb(135, 206, " + (d.wombat * 8) + ")";
+                return "rgb(0, " + (d.wombat * 15) + ", 0)";
             });
     
         svg.selectAll("text")
@@ -45,12 +45,12 @@ function init(){
             .text(function(d) {
                 return d.wombat;
             })
-            .attr("fill", "black")
+            .attr("fill", "white")
             .attr("x", function(d, i) {
                 return i * (w / wombatSightings.length) + 10.5;
             })
             .attr("y", function(d) {
-                return h - (d.wombat * 4);
+                return h - (d.wombat * 6) + 12.5;
             });
     }
     
