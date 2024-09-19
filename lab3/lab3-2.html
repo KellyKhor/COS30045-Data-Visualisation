@@ -20,9 +20,11 @@
 	<p>The following is a modified version of original Lab3-2 with axis label</p>
 
 	<script>
+		//Set the width, height and padding for the svg container
 		var w = 600;
 		var h = 400;
-		var padding = 30;
+		var padding = 50;
+
 
 		var dataset = [
                     [2,8],
@@ -37,27 +39,31 @@
 					[6,16]
         ];
 
+		//Create the linear scale for x and y axis
         var xScale = d3.scaleLinear()
                         .domain([0, 
                         d3.max(dataset, function(d){
                             return d[0];
                         })])
-                        .range([padding, w - padding])  //width of svg canvas
+                        .range([padding, w - padding])  //Map data to the SVG width
 
         var yScale = d3.scaleLinear()
                         .domain([0, 
                         d3.max(dataset, function(d){
                             return d[1];
                         })])
-                        .range([ h - padding, padding])  //height of svg canvas
+                        .range([ h - padding, padding])  //Map data to the SVG height
                                     
 
+		//Create the svg element in the body, and set its width, height and background colour 
 		var svg = d3.select("body")
 					.append("svg")
 					.attr("width", w)
 					.attr("height", h)
 					.attr("fill", "rgb(106,90, 205)" );
 
+
+		//Define the x-axis and y-axis
         var xAxis = d3.axisBottom()
                         .scale(xScale)
 
@@ -65,19 +71,22 @@
                         .ticks(5)
                         .scale(yScale)
 
+
+		//Bind the dataset to circles and append the circles to the SVG element
 		svg.selectAll("circle   ")
 			.data(dataset)
-			.enter()
+			.enter()	
 			.append("circle")
-			.attr("cx", function(d, i) {
+			.attr("cx", function(d, i) {	//set the x position using the xScale to remain within SVG range
 				return xScale(d[0]);
 			})
-			.attr("cy", function(d, i){
+			.attr("cy", function(d, i){	//set the y position using the yScale to remain within SVG range
 				return yScale(d[1]);
 			})
-			.attr("r", 3)
+			.attr("r", 3)	//circle radius
 			.attr("fill", "slategrey");
 
+		//Add text labels to display the coordinates 
 		svg.selectAll("text")
 			.data(dataset)
 			.enter()
@@ -93,14 +102,30 @@
 			});
 			
 	
+		//Add the axes
         svg.append("g")
-                .attr("transform", "translate(0, "+ (h - padding) +")")
-                .call(xAxis);
+                .attr("transform", "translate(0, "+ (h - padding) +")")	//Move to the bottom
+                .call(xAxis);	//Call function to create the x-axis
 
         svg.append("g")
            .attr("transform", "translate(" + padding + ", 0)")
            .call(yAxis);
 			
+		//Add x-axis label
+		svg.append("text")
+			.attr("text-anchor", "end")
+			.attr("x", w)
+			.attr("y", h - 10)
+			.text("Tree Age (year)")
+
+		// Y axis label:
+		svg.append("text")
+    		.attr("text-anchor", "end")
+  			.attr("transform", "rotate(-90)") //Rotate the text 90 degree counter clockwise
+    		.attr("y", 20)	//Adjust relative to the axis 
+    		.attr("x", -40)
+    		.text("Tree Height (m)")
+
 	</script>
 
 <footer>
