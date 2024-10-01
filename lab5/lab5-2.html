@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Lab 5-1"/>
+	<meta name="keywords"		  content="HTML, CSS"/>
+	<meta name="author"			  content="Khor Jing Yin"/>
+
+	<title>Task 5.2 D3 Transitions</title>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<link rel="stylesheet" href="../style.css">   
+
+</head>
+
+<body>
+	<a class="navbutton" href="../main.html">Main</a>
+	<a class="navbutton" href="lab5-1.html">Lab 5-1</a>
+	<a class="navbutton" href="lab5-2.html" >Lab 5-2</a>
+	<a class="navbutton" href="lab5-3.html">Lab 5-3</a>
+
+	<h1>Lab5.2 D3 Transitions</h1>
+
+    <div>
+    <button class="navbutton" id="update">Update Once</button>
+    <button class="navbutton" id="trans1">Transition 1</button>
+    <button class="navbutton" id="trans2">Transition 2</button>
+    </div>
+
+	<script>
+
+		var w = 500;
+		var h = 300;
+		var padding = 40;
+
+		var dataset = [14, 5, 26, 23, 9, 17, 2, 29, 8];
+
+		//Define scales
+        var xScale = d3.scaleBand()     //use scaleBand instead of scaleLinear when working with ordinal data 
+                                        // band scale divides the range (0 to w) into evenly spaced bands
+                        .domain(d3.range(dataset.length))   //calculate range of the domain
+                        .rangeRound([padding, w - padding])  // range that domain is mapped to (according to the padding on both sides of the svg)
+                        .paddingInner(0.05);
+
+        var yScale = d3.scaleLinear()
+                        .domain([0,d3.max(dataset)])
+                        .range([h - padding, padding]);  //Map data to the SVG height
+
+		//Create the svg element 
+		var svg = d3.select("body")
+					.append("svg")
+					.attr("width", w)
+					.attr("height", h)
+					.attr("fill", "rgb(106,90, 205)" );
+
+
+		//Define the x-axis and y-axis
+		var xAxis = d3.axisBottom()
+                    .scale(xScale);
+
+        var yAxis = d3.axisLeft()
+                        .ticks(5)
+                        .scale(yScale);
+
+		//drawing the initial bars and text
+		svg.selectAll("rect")
+			.data(dataset)
+			.enter()
+			.append("rect")
+			<!-- d is dataset and i is the index of the values from dataset-->
+			.attr("x", function(d, i) { // Use 'i' (the index of the data point) to determine the position
+				return xScale(i);
+			})
+			.attr("y", function(d){
+				return yScale(d);
+			})
+			.attr("width", xScale.bandwidth())
+			.attr("height", function(d){ 
+				return h - padding - yScale(d);		//adjust height based on yScale 
+			});
+			
+			//add the text labels 
+			svg.selectAll("text")
+				.data(dataset)
+				.enter()
+				.append("text")
+				.text(function(d){
+					return d;
+				})
+				.attr("fill", "black")
+				.attr("x", function(d,i) {
+					return xScale(i) + xScale.bandwidth() / 2;
+				})
+				.attr("y", function(d){
+					return yScale(d) - 5; //position label above the bar
+				});
+
+
+			//Add the axes
+			svg.append("g")
+        	    .attr("transform", "translate(0, "+ (h - padding) +")")	//Move to the bottom
+            	.call(xAxis);	//Call function to create the x-axis
+
+	        svg.append("g")
+	           .attr("transform", "translate(" + padding + ", 0)")
+    	       .call(yAxis);
+			
+			//Add x-axis label
+			svg.append("text")
+				.attr("text-anchor", "end")
+				.attr("x", w /2)
+				.attr("y", h - 10)
+				.text("X-axis label")
+
+			// Y axis label:
+			svg.append("text")
+    			.attr("text-anchor", "end")
+  				.attr("transform", "rotate(-90)") 
+ 		   		.attr("x", -h / 2)	
+    			.attr("y", 15)
+    			.text("T-axis label")
+
+
+            //Buttons for update and transitions
+			d3.select("#trans1").on("click", function(){
+                updateChart(d3.easeElasticOut);
+            });
+
+			d3.select("#trans2").on("click", function(){
+                updateChart(d3.easeCircleOut);
+            });
+
+			d3.select("#update").on("click", function(){
+                updateChart();
+            });
+
+
+			//Update function 
+			function updateChart(easeType = d3.easeLinear) {
+				var numVales = dataset.length;
+				dataset = [];
+				var maxValue = 25;
+				
+				for (var i =0; i <numVales; i++){
+					var newNumber = Math.floor(Math.random()* maxValue);
+					dataset.push(newNumber);
+
+				}
+
+				//update the yScale domain according to new dataset
+				yScale.domain([0, d3.max(dataset)+ 5]);
+
+				//update bars
+				svg.selectAll("rect")
+					.data(dataset)
+                    .transition()
+                    .delay(function(d, i){
+                        return i/dataset.length * 1000;
+                    })
+                    .duration(3000)
+                    .ease(easeType)
+					.attr("y", function(d){
+						return yScale(d);
+					})
+					.attr("height", function(d){
+						return h - padding - yScale(d);
+					});
+
+				//update text label 
+				svg.selectAll("text")
+					.data(dataset)
+                    .transition()
+                    .delay(function(d, i){
+                        return i/dataset.length * 1000;
+                    })
+                    .duration(3000)
+                    .ease(easeType)
+					.text(function(d){
+						return d;
+					})
+					.attr("y", function(d){
+						return yScale(d) - 5;
+					});
+					
+            };
+			
+	</script>
+
+	
+
+<footer>
+	<p>COS30045 Data Visualisation</p>
+	<p>Semester 4 2022</p>
+	<p>Khor Jing Yin</p>
+</footer>
+
+</body>
+</html>
