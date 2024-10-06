@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description"	content="Data Visualisation Lab 5-1"/>
+	<meta name="keywords"		  content="HTML, CSS"/>
+	<meta name="author"			  content="Khor Jing Yin"/>
+
+	<title>Task 6.1 D3 Interactivity - Mouse Over Effect</title>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<link rel="stylesheet" href="../style.css">   
+
+</head>
+
+<body>
+	<a class="navbutton" href="../main.html">Main</a>
+	<a class="navbutton" href="la6-1.html">Lab 6-1</a>
+	<a class="navbutton" href="lab6-2.html" >Lab 6-2</a>
+
+	<h1>Lab6.1 D3 Interactivity - Mouse Over Effects</h1>
+
+    <div>
+    <button class="navbutton" id="add">Add</button>
+    <button class="navbutton" id="remove">Remove</button>
+    </div>
+
+	<script>
+		var w = 500;
+		var h = 300;
+		var padding = 40;
+
+		var dataset = [14, 5, 26, 23, 9, 17, 2, 29, 8];
+
+		//Define scales
+        var xScale = d3.scaleBand()     //use scaleBand instead of scaleLinear when working with ordinal data 
+                                        // band scale divides the range (0 to w) into evenly spaced bands
+                        .domain(d3.range(dataset.length))   //calculate range of the domain
+                        .rangeRound([padding, w - padding])  // range that domain is mapped to (according to the padding on both sides of the svg)
+                        .paddingInner(0.05);
+
+        var yScale = d3.scaleLinear()
+                        .domain([0,d3.max(dataset)])
+                        .range([h - padding, padding]);  //Map data to the SVG height
+
+		//Create the svg element 
+		var svg = d3.select("body")
+					.append("svg")
+					.attr("width", w)
+					.attr("height", h)
+					.attr("fill", "rgb(106,90, 205)" );
+
+
+		//drawing the initial bars and text
+		svg.selectAll("rect")
+			.data(dataset)
+			.enter()
+			.append("rect")
+			<!-- d is dataset and i is the index of the values from dataset-->
+			.attr("x", function(d, i) { // Use 'i' (the index of the data point) to determine the position
+				return xScale(i);
+			})
+			.attr("y", function(d){
+				return yScale(d);
+			})
+			.attr("width", xScale.bandwidth())
+			.attr("height", function(d){ 
+				return h - padding - yScale(d);		//adjust height based on yScale 
+			})
+            .attr("fill", "grey")
+            .on("mouseover", function(event, d){
+                d3.select(this)
+                    .attr("fill", "orange");
+                
+                var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() /2;
+                var yPosition = parseFloat(d3.select(this).attr("y")) + 15;
+
+                svg.append("text")
+                .attr("id", "tooltip")
+                .attr("x", xPosition)
+                .attr("y", yPosition)
+                .attr("text-anchor", "middle")
+                .attr("font-weight", "bold")
+                .attr("fill", "black")
+                .text(d);
+            })
+            .on("mouseout", function(){
+                d3.select(this)
+                    .attr("fill", "grey");
+
+                d3.select("#tooltip").remove();
+            })
+/*            .append("title")
+            .text(function(d){
+                return "This value is " + d;
+            })  */
+            ;
+			
+
+            //Buttons adding and removing
+			d3.select("#add").on("click", function(){
+                var maxValue = 25;
+                var newNumber = Math.floor(Math.random()* maxValue);
+                dataset.push(newNumber);
+                updateChart();
+            });
+
+            d3.select("#remove").on("click", function(){
+                dataset.shift();
+                updateChart();
+            });
+
+
+			//Update function 
+			function updateChart() {
+
+				//update the xScale and yScale domain according to new dataset
+                xScale.domain(d3.range(dataset.length));
+				yScale.domain([0, d3.max(dataset)]);
+
+                //Rebind exisitng rectangles with new variable
+                var bars = svg.selectAll("rect")
+                                .data(dataset);
+
+                bars.enter()
+                    .append("rect")
+                    .attr("x",w)
+                    .attr("y", function(d){
+                        return yScale(d);
+                    })
+                    .attr("fill", "grey")
+                    .merge(bars)
+                    .on("mouseover", function(event,d){
+                        d3.select(this)
+                            .attr("fill", "orange");
+
+                        var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() /2;
+                        var yPosition = parseFloat(d3.select(this).attr("y")) + 15;
+
+                        svg.append("text")
+                        .attr("id", "tooltip")
+                        .attr("x", xPosition)
+                        .attr("y", yPosition)
+                        .attr("text-anchor", "middle")
+                        .attr("font-weight", "bold")
+                        .attr("fill", "black")
+                        .text(d);
+                    })
+                    .on("mouseout", function(){
+                        d3.select(this)
+                            .attr("fill", "grey");
+                        
+                        d3.select("#tooltip").remove();
+                    })
+                    .transition()
+                    .duration(1000)
+                    .attr("x", function(d,i){
+                        return xScale(i);
+                    })
+                    .attr("y", function(d){
+                        return yScale(d);
+                    })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function(d){
+                        return h - padding - yScale(d);
+                    })
+               
+                    
+                /* 
+                // Select all rects (including new and existing)
+                var allBars = svg.selectAll("rect").data(dataset);
+
+                // Remove existing title elements to avoid duplication
+                allBars.select("title").remove();
+
+                // Add or update title elements for each bar
+                allBars.append("title")
+                    .text(function(d) {
+                        return "This value is " + d;
+                x});
+                */
+            
+               // Handle the exit for bar (remove the ones not in dataset)
+                bars.exit()
+                    .transition()
+                    .duration(3000)
+                    .attr("x", w) 
+                    .remove(); 
+            };
+			
+	</script>
+
+	
+
+<footer>
+	<p>COS30045 Data Visualisation</p>
+	<p>Semester 4 2022</p>
+	<p>Khor Jing Yin</p>
+</footer>
+
+</body>
+</html>
